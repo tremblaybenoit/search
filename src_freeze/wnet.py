@@ -101,7 +101,7 @@ class UNetEncoder(nn.Module):
         :param num_channels: Number of channels in the raw image data
         :param num_classes: Number of classes in the output class probabilities
         """
-        
+
         super(UNetEncoder, self).__init__()
         self.conv1 = ConvPoolBlock(num_channels, 32)
         self.conv2 = ConvPoolBlock(32, 32)
@@ -110,7 +110,7 @@ class UNetEncoder(nn.Module):
         self.deconv2 = DeconvBlock(64, 32)
         self.deconv3 = DeconvBlock(64, 32)
         self.output = OutputBlock(32, num_classes)
-        
+
     def forward(self, x: Tensor) -> Tensor:
         """Pushes a set of inputs (x) through the network.
 
@@ -142,7 +142,7 @@ class UNetDecoder(nn.Module):
         :param num_channels: Number of channels in the raw image data
         :param num_classes: Number of classes in the output class probabilities
         """
-        
+
         super(UNetDecoder, self).__init__()
         self.conv1 = ConvPoolBlock(num_classes, 32)
         self.conv2 = ConvPoolBlock(32, 32)
@@ -185,7 +185,7 @@ class WNet(Network):
         :param num_channels: Number of channels in the raw image data
         :param num_classes: Number of classes in the output class probabilities
         """
-        
+
         super(WNet, self).__init__()
         self.encoder = UNetEncoder(num_channels=num_channels, num_classes=num_classes)
         self.decoder = UNetDecoder(num_channels=num_channels, num_classes=num_classes)
@@ -243,7 +243,7 @@ class WNet(Network):
         # Decoder part
         reconstructed = self.forward_reconstruct_(mask)
         return mask, reconstructed
-        
+
     def forward2(self, x: Tensor, y: Tensor) -> Tuple[Tensor, Tensor]:
         #benoit
         """Pushes a set of inputs (x) through the network.
@@ -254,14 +254,14 @@ class WNet(Network):
         device_type = self.get_device_type()
         if device_type == 'cuda':
             x = x.cuda()
-        
+
         # Encoder part
         encoded = self.forward_encode_(x).transpose(1, -1)
         mask = nn.Softmax(-1)(encoded).transpose(-1, 1)
         # Decoder part
         reconstructed = self.forward_reconstruct_(y)
         return mask, reconstructed
-        
+
 
     # Linnea: added freeze_encoder and freeze_decoder to the get_loss function
     def get_loss(self, labels: Tensor, inputs: Tensor, freeze_encoder: int = 0, freeze_decoder: int = 0) -> Tensor:
@@ -276,7 +276,7 @@ class WNet(Network):
         device_type = self.get_device_type()
         if device_type == 'cuda':
             labels, inputs = labels.cuda(), inputs.cuda()
- 
+
         #benoit : Freezing the encoder is what changes the structure
         if freeze_encoder == 0:
             masks, outputs = self.forward(inputs)
@@ -290,13 +290,15 @@ class WNet(Network):
         ncut_loss = alpha * NCutLoss2D()(masks, inputs)
         mse_loss = beta * nn.MSELoss()(outputs, inputs.detach())
         smooth_loss = gamma * OpeningLoss2D()(masks)
-        
+
+        # Custom loss to account for missing/bad pixels
+
         #benoit
         # Loss function
         loss = (1-freeze_encoder)*ncut_loss + (1-freeze_decoder)*mse_loss + (1-freeze_encoder)*smooth_loss
-        
+
         # Linnea: debugging
         print("---------------------------------------------")
         print("ncut_loss, mse_loss, smooth_loss, total loss", ncut_loss, mse_loss, smooth_loss, loss)
-        
+
         return loss
