@@ -16,7 +16,7 @@ __Contents__
 ## Publications & Communications
 
 - __Paper(s) published:__
-  - Ajay Kumar Tiwari, Benoit Tremblay, Andong Hu, Linnea M. Wolniewicz, Michael Kirk, Silvina Guidoni, Brent Smith, Matthew Penn, and Tanmoy Samanta, 2020. "[SEARCH: SEgmentation of polAR Coronal HOles](https://ml4physicalsciences.github.io/2020/files/NeurIPS_ML4PS_2020_83.pdf)". Third Workshop on Machine Learning and the Physical Sciences (NeurIPS 2020).
+  - Ajay Kumar Tiwari, Benoit Tremblay, Andong Hu, Linnea M. Wolniewicz, Michael Kirk, Silvina Guidoni, Brent Smith, Matthew Penn, and Tanmoy Samanta, 2020. "[SEARCH: SEgmentation of polAR Coronal Holes](https://ml4physicalsciences.github.io/2020/files/NeurIPS_ML4PS_2020_83.pdf)". Third Workshop on Machine Learning and the Physical Sciences (NeurIPS 2020).
 
 - __Blog(s):__
   - Sean Keefe, Ajay Kumar Tiwari. "[Hackweek 2020 Teams Use Machine Learning and GPUs to Analyze Heliophysics Data](https://www.nccs.nasa.gov/news-events/nccs-highlights/Helio-HW20)". NASA Center for Climate Simulation blog.
